@@ -132,7 +132,7 @@ def read_package(workout_type: str, data: list) -> Training:
     data_pack: dict[str, type[Training]] = {'SWM': Swimming,
                                             'RUN': Running,
                                             'WLK': SportsWalking}
-    
+
     if workout_type in data_pack:
         return data_pack[workout_type](*data)
     else:
