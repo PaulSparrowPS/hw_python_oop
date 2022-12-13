@@ -60,11 +60,8 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    LEN_STEP: float = 0.65
-    M_IN_KM: float = 1000
     CALORIES_MEAN_SPEED_MULTIPLIER: float = 18
     CALORIES_MEAN_SPEED_SHIFT: float = 1.79
-    H_IN_MIN: float = 60
 
     def get_spent_calories(self) -> float:
         """Расчёт количества калорий, израсходованных за тренировку"""
@@ -72,16 +69,13 @@ class Running(Training):
                 * self.get_mean_speed()
                 + self.CALORIES_MEAN_SPEED_SHIFT)
                 * self.weight / self.M_IN_KM
-                * (self.duration * self.H_IN_MIN))
+                * (self.duration * self.MIN_IN_H))
 
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     CALORIES_WEIGHT_MULTIPLIER = 0.035
     CALORIES_SPEED_HEIGHT_MULTIPLIER = 0.029
-    M_IN_KM: int = 1000
-    LEN_STEP: float = 0.65
-    MIN_IN_H: float = 60
     KMH_IN_MSEC: float = 0.278
     CM_IN_M: float = 100
 
@@ -107,8 +101,7 @@ class Swimming(Training):
     """Тренировка: плавание."""
     CALORIES_MEAN_SPEED_MULTIPLIER: float = 1.1
     CALORIES_MEAN_SPEED_SHIFP: int = 2
-    LEN_STEP: float = 1.38
-    M_IN_KM: int = 1000
+    LEN_STEP = 1.38
 
     def __init__(self,
                  action: int,
@@ -139,7 +132,11 @@ def read_package(workout_type: str, data: list) -> Training:
     data_pack: dict[str, type[Training]] = {'SWM': Swimming,
                                             'RUN': Running,
                                             'WLK': SportsWalking}
-    return data_pack[workout_type](*data)
+    
+    if workout_type in data_pack:
+        return data_pack[workout_type](*data)
+    else:
+        raise ValueError(f'Нет такого типа тренирова {workout_type}')
 
 
 def main(training: Training) -> None:
